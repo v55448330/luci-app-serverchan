@@ -238,7 +238,7 @@ function load_notify() {
 function temper_notify() {
     if [ ! -z "$temperature_enable" ] && [ "$temperature_enable" -eq "1" ] ; then
         if [ ! -z "$debuglevel" ] && [ "$debuglevel" -ne "1" ] ; then  echo "`date "+%H:%M:%S"` 【温度】正在检测 CPU 温度" >> ${logfile};fi
-        cpu_wendu=`sensors | awk 'NR==3{print $3}' | cut -d"+" -f2 | cut -d"." -f1`
+        cpu_wendu=`sensors | grep Core | awk 'NR==1{print $3}' | cut -d"+" -f2 | cut -d"." -f1`
         temperature=`uci get serverchan.serverchan.temperature`>/dev/null 2>&1
         if [ ! -z "$temperature" ] && [ "$cpu_wendu" -gt "$temperature" ] ; then
             Temperature_n=$(($Temperature_n+1))
