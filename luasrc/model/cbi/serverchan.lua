@@ -33,10 +33,10 @@ debuglevel:value("2",translate("详细"))
 debuglevel.rmempty = true 
 debuglevel.optional = true
 
-device_aliases= s:taboption("tab_basic", DynamicList, "device_aliases", translate("设备别名"))
-device_aliases.rmempty = true 
-device_aliases.optional = true
-device_aliases.description = translate("<br/> 请输入设备 MAC 和设备别名，用“-”隔开，如：<br/> XX:XX:XX:XX:XX:XX-我的手机")
+--device_aliases= s:taboption("tab_basic", DynamicList, "device_aliases", translate("设备别名"))
+--device_aliases.rmempty = true 
+--device_aliases.optional = true
+--device_aliases.description = translate("<br/> 请输入设备 MAC 和设备别名，用“-”隔开，如：<br/> XX:XX:XX:XX:XX:XX-我的手机")
 
 
 e=s:taboption("log",TextValue,"log")
@@ -57,9 +57,9 @@ a.rmempty=true
 a=s:taboption("tab_basic2", Flag,"serverchan_up",translate("设备上线通知"))
 a.default=0
 a.rmempty=true
-a=s:taboption("tab_basic2", Flag,"serverchan_down",translate("设备下线通知"))
-a.default=0
-a.rmempty=true
+--a=s:taboption("tab_basic2", Flag,"serverchan_down",translate("设备下线通知"))
+--a.default=0
+--a.rmempty=true
 a=s:taboption("tab_basic2", Flag,"cpuload_enable",translate("CPU 负载报警"))
 a.default=0
 a.rmempty=true
