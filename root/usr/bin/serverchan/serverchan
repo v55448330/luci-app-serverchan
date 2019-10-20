@@ -280,7 +280,7 @@ function check_wan_ip() {
             echo "`date "+%H:%M:%S"`  上次 IP: ${lastIP}" >> ${logfile}
             echo "`date "+%H:%M:%S"`  【微信推送】当前IP：${wanIP}" >> ${logfile}
             echo -n $wanIP > ${dir}ip
-            title="外网 IP 地址变化"
+            title="路由状态变动"
             content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **外网 IP 地址变化**%0D%0A%0D%0A - **当前 IP：**${wanIP}"
             echo $title >${dir}title
             echo -n $content >>${dir}content
@@ -292,7 +292,7 @@ function check_wan_ip() {
 
 function check_reboot() {
     uptime=$(cat /proc/uptime | awk '{print $1}' | cut -d"." -f1)
-    if [ $uptime <= 110 ]; then
+    if [ $uptime -le 110 ]; then
         title="路由器状态变动"
         content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **路由器状态变动**%0D%0A%0D%0A - 路由器已重启"
         echo $title >${dir}title
