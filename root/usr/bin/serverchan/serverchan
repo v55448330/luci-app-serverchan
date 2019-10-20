@@ -334,8 +334,8 @@ function send() {
         for ip in $IPLIST; do
             ip_addr=$(echo -n "${ip}" | awk -F"," '{print $1}')
             ip_name=$(echo -n "${ip}" | awk -F"," '{print $2}')
-		se  nd_content=${send_content}"%0D%0A%0D%0A""- $ip_addr / "
-		se  nd_content=${send_content}"$ip_name"
+		send_content=${send_content}"%0D%0A%0D%0A""- $ip_addr / "
+		send_content=${send_content}"$ip_name"
         done
     fi
 	send_title=$( echo $send_title | sed $'s/\ /%20/g'| sed $'s/\"/%22/g'| sed $'s/\#/%23/g'| sed $'s/\&/%26/g'| sed $'s/\,/%2C/g'| sed $'s/\//%2F/g'| sed $'s/\:/%3A/g'| sed $'s/\;/%3B/g'| sed $'s/\=/%3D/g'| sed $'s/\@/%40/g')
