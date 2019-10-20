@@ -272,7 +272,6 @@ function check_wan_ip() {
         wanIP=$(ubus call network.interface.wan status | grep '\"address\"' | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
         #查询ip历史记录
         if [ -f ${dir}ip ] ; then lastIP=$( cat "${dir}ip" ); else unset lastIP; fi
-        if [ ! -z "$lastIP" ] ; then
             #if [ "$wanIP"!="$lastIP" ] && [ ! -z "$wanIP" ] ; then
             if [ ! -z "$wanIP" ] && ( echo ${wanIP} | grep -w -q ${lastIP} );then
                 if [ ! -z "$debuglevel" ] && [ "$debuglevel" -ne "1" ] ; then  echo "`date "+%H:%M:%S"`  IP 无变化，当前 ip 为 $lastIP" >> ${logfile};fi
@@ -287,18 +286,19 @@ function check_wan_ip() {
                 echo -n $content >>${dir}content
                 serverchan_send				
             fi
-            
-        else
-            echo "`date "+%H:%M:%S"`  【微信推送】路由器已经重启!当前IP：${wanIP}" >> ${logfile}
-            echo "`date "+%H:%M:%S"`  当前IP: ${wanIP}" >> ${logfile}
-            echo -n $wanIP > ${dir}ip
-            title="路由器重新启动"
-            content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **路由器重新启动** %0D%0A%0D%0A - **当前IP：**${wanIP}"
-            echo $title > ${dir}title
-            echo -n $content >> ${dir}content
-            serverchan_send
         fi
         if [ -f ${logfile} ] ; then clean_log;fi
+    fi
+}
+
+function check_reboot() {
+    uptime=$(cat /proc/uptime | awk '{print $1}' | cut -d"." -f1)
+    if [ $uptime <= 110 ]; then
+        title="路由器状态变动"
+        content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **路由器状态变动**%0D%0A%0D%0A - 路由器已重启"
+        echo $title >${dir}title
+        echo -n $content >>${dir}content
+        serverchan_send				
     fi
 }
 
