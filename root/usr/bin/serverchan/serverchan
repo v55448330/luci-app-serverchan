@@ -272,20 +272,19 @@ function check_wan_ip() {
         wanIP=$(ubus call network.interface.wan status | grep '\"address\"' | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
         #查询ip历史记录
         if [ -f ${dir}ip ] ; then lastIP=$( cat "${dir}ip" ); else unset lastIP; fi
-            #if [ "$wanIP"!="$lastIP" ] && [ ! -z "$wanIP" ] ; then
-            if [ ! -z "$wanIP" ] && ( echo ${wanIP} | grep -w -q ${lastIP} );then
-                if [ ! -z "$debuglevel" ] && [ "$debuglevel" -ne "1" ] ; then  echo "`date "+%H:%M:%S"`  IP 无变化，当前 ip 为 $lastIP" >> ${logfile};fi
-            else
-                echo "`date "+%H:%M:%S"`  当前 IP: ${wanIP}" >> ${logfile}
-                echo "`date "+%H:%M:%S"`  上次 IP: ${lastIP}" >> ${logfile}
-                echo "`date "+%H:%M:%S"`  【微信推送】当前IP：${wanIP}" >> ${logfile}
-                echo -n $wanIP > ${dir}ip
-                title="外网 IP 地址变化"
-                content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **外网 IP 地址变化**%0D%0A%0D%0A - **当前 IP：**${wanIP}"
-                echo $title >${dir}title
-                echo -n $content >>${dir}content
-                serverchan_send				
-            fi
+        #if [ "$wanIP"!="$lastIP" ] && [ ! -z "$wanIP" ] ; then
+        if [ ! -z "$wanIP" ] && ( echo ${wanIP} | grep -w -q ${lastIP} );then
+            if [ ! -z "$debuglevel" ] && [ "$debuglevel" -ne "1" ] ; then  echo "`date "+%H:%M:%S"`  IP 无变化，当前 ip 为 $lastIP" >> ${logfile};fi
+        else
+            echo "`date "+%H:%M:%S"`  当前 IP: ${wanIP}" >> ${logfile}
+            echo "`date "+%H:%M:%S"`  上次 IP: ${lastIP}" >> ${logfile}
+            echo "`date "+%H:%M:%S"`  【微信推送】当前IP：${wanIP}" >> ${logfile}
+            echo -n $wanIP > ${dir}ip
+            title="外网 IP 地址变化"
+            content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **外网 IP 地址变化**%0D%0A%0D%0A - **当前 IP：**${wanIP}"
+            echo $title >${dir}title
+            echo -n $content >>${dir}content
+            serverchan_send				
         fi
         if [ -f ${logfile} ] ; then clean_log;fi
     fi
@@ -367,6 +366,7 @@ do
     load_notify
     temper_notify
     check_wan_ip
+    check_reboot
     enable_detection
     sleep $sleeptime
 continue
