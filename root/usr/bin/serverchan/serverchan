@@ -158,7 +158,6 @@ function serverchan_init() {
     Temperature_n=0
     cpuload_n=0
     send_enable=0
-    create_client_cache
     echo "`date "+%H:%M:%S"` 【初始化】载入配置文件" >> ${logfile}
     if [ ! -z "$debuglevel" ] && [ "$debuglevel" -ne "1" ] ; then  echo "`date "+%H:%M:%S"` 【初始化】工作目录为 $dir " >> ${logfile};fi
     if [ ! -z "$debuglevel" ] && [ "$debuglevel" -ne "1" ] ; then  echo "`date "+%H:%M:%S"` 【初始化】log 目录为 $logfile " >> ${logfile};fi
@@ -363,6 +362,7 @@ while [ "$serverchan_enable" -eq "1" ] ;
 do
     if [ -f ${logfile} ] ; then clean_log;fi
     serverchan_cron
+    create_client_cache
     check_client
     load_notify
     temper_notify
