@@ -155,23 +155,23 @@ sheep.datatype=uinteger
 sheep:depends({serverchan_sheep="1"})
 sheep:depends({serverchan_sheep="2"})
 
-mac=s:taboption("tab_basic4", ListValue,"macmechanism",translate("MAC过滤"))
-mac:value("",translate("disable"))
-mac:value("allow",translate("忽略列表内设备"))
-mac:value("block",translate("仅通知列表内设备"))
-mac:value("interface",translate("仅通知此接口设备"))
+-- mac=s:taboption("tab_basic4", ListValue,"macmechanism",translate("MAC过滤"))
+-- mac:value("",translate("disable"))
+-- mac:value("allow",translate("忽略列表内设备"))
+-- mac:value("block",translate("仅通知列表内设备"))
+-- mac:value("interface",translate("仅通知此接口设备"))
 
-allowedmac = s:taboption("tab_basic4", DynamicList, "serverchan_whitelist", translate("忽略列表"))
-nt.mac_hints(function(mac, name) allowedmac :value(mac, "%s (%s)" %{ mac, name }) end)
-allowedmac.rmempty = true 
-allowedmac.optional = true
-allowedmac:depends({macmechanism="allow"})
+-- allowedmac = s:taboption("tab_basic4", DynamicList, "serverchan_whitelist", translate("忽略列表"))
+-- nt.mac_hints(function(mac, name) allowedmac :value(mac, "%s (%s)" %{ mac, name }) end)
+-- allowedmac.rmempty = true 
+-- allowedmac.optional = true
+-- allowedmac:depends({macmechanism="allow"})
 
-blockedmac = s:taboption("tab_basic4", DynamicList, "serverchan_blacklist", translate("关注列表"))
-nt.mac_hints(function(mac, name) blockedmac:value(mac, "%s (%s)" %{ mac, name }) end)
-blockedmac.rmempty = true 
-blockedmac.optional = true
-blockedmac:depends({macmechanism="block"})
+-- blockedmac = s:taboption("tab_basic4", DynamicList, "serverchan_blacklist", translate("关注列表"))
+-- nt.mac_hints(function(mac, name) blockedmac:value(mac, "%s (%s)" %{ mac, name }) end)
+-- blockedmac.rmempty = true 
+-- blockedmac.optional = true
+-- blockedmac:depends({macmechanism="block"})
 
 n = s:taboption("tab_basic4", ListValue, "serverchan_interface", translate("接口名称"))
 n:depends({macmechanism="interface"})
@@ -190,6 +190,7 @@ end
 
 local apply = luci.http.formvalue("cbi.apply")
  if apply then
+     io.popen("/etc/init.d/serverchan stop")
      io.popen("/etc/init.d/serverchan start")
 end
 return m
