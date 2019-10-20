@@ -154,7 +154,6 @@ function serverchan_init() {
     rm -f ${dir}title >/dev/null 2>&1
     rm -f ${dir}content >/dev/null 2>&1
     rm -f ${dir}serverchan.lock >/dev/null 2>&1
-    rm -r ${dir}client_list_cache >/dev/null 2>&1
     Temperature_n=0
     cpuload_n=0
     send_enable=0
