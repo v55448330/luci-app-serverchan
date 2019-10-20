@@ -226,7 +226,7 @@ function load_notify() {
         if [ "$cpuload_n" -eq "5" ] ;then
             title="路由器报警！"
             echo "`date "+%H:%M:%S"` 【微信推送】当前 CPU 负载过高: ${cpu_fuzai}" >> ${logfile}
-            content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **CPU 负载过高**%0D%0A%0D%0A - **CPU 负载已连续五分钟超过预设**%0D%0A%0D%0A > 接下来一小时不再提示%0D%0A%0D%0A - **当前负载：**${cpu_fuzai}%0D%0A%0D%0A - **负载阈值：**${cpuload}"
+            content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **处理器负载过高**%0D%0A%0D%0A - **处理器负载已连续五分钟超过预设**%0D%0A%0D%0A > 接下来一小时不再提示%0D%0A%0D%0A - **当前负载：**${cpu_fuzai}%0D%0A%0D%0A - **负载阈值：**${cpuload}"
             echo $title > ${dir}title
             echo -n $content >> ${dir}content
             serverchan_send
@@ -252,9 +252,9 @@ function temper_notify() {
             if [ ! -z "$debuglevel" ] && [ "$debuglevel" -ne "1" ] ; then  echo "`date "+%H:%M:%S"`  CPU 温度正常：$cpu_wendu" >> ${logfile};fi
         fi
         if [ "$Temperature_n" -eq "5" ] ;then
-            title="设备报警！"
+            title="路由器报警！"
             echo "`date "+%H:%M:%S"`  【微信推送】当前 CPU 温度过高: ${cpu_wendu}" >> ${logfile}
-            content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **CPU 温度过高**%0D%0A%0D%0A - **CPU 温度已连续五分钟超过预设**%0D%0A%0D%0A > 接下来一小时不再提示%0D%0A%0D%0A - **当前温度：**${cpu_wendu}%0D%0A%0D%0A - **温度阈值：**${temperature}"
+            content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **处理器温度过高**%0D%0A%0D%0A - **处理器温度已连续五分钟超过预设**%0D%0A%0D%0A > 接下来一小时不再提示%0D%0A%0D%0A - **当前温度：**${cpu_wendu}%0D%0A%0D%0A - **温度阈值：**${temperature}"
             echo $title >${dir}title
             echo -n $content >>${dir}content
             serverchan_send
@@ -280,8 +280,8 @@ function check_wan_ip() {
             echo "`date "+%H:%M:%S"`  上次 IP: ${lastIP}" >> ${logfile}
             echo "`date "+%H:%M:%S"`  【微信推送】当前IP：${wanIP}" >> ${logfile}
             echo -n $wanIP > ${dir}ip
-            title="路由状态变动"
-            content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **外网 IP 地址变化**%0D%0A%0D%0A - **当前 IP：**${wanIP}"
+            title="路由器状态变动"
+            content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **外网地址变化**%0D%0A%0D%0A - **当前地址：**${wanIP}"
             echo $title >${dir}title
             echo -n $content >>${dir}content
             serverchan_send				
@@ -292,9 +292,10 @@ function check_wan_ip() {
 
 function check_reboot() {
     uptime=$(cat /proc/uptime | awk '{print $1}' | cut -d"." -f1)
-    if [ $uptime -le 110 ]; then
+    if [ "$uptime" -le "110" ]; then
+        reboot_time=$(date "+%Y-%m-%d_%H:%M:%S")
         title="路由器状态变动"
-        content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **路由器状态变动**%0D%0A%0D%0A - 路由器已重启"
+        content="%0D%0A%0D%0A---%0D%0A%0D%0A""#### **路由器已重启**%0D%0A%0D%0A - ${reboot_time}"
         echo $title >${dir}title
         echo -n $content >>${dir}content
         serverchan_send				
@@ -313,7 +314,7 @@ function send() {
 	if [ -z "$send_title" ] ; then send_title="OpenWrt 路由状态："; fi
 	router_status=`uci get serverchan.serverchan.router_status` > /dev/null 2>&1
     if [ ! -z "$router_status" ] && [ "$router_status" -eq "1" ] ; then send_content=${send_content}"%0D%0A%0D%0A---%0D%0A%0D%0A#### **系统运行状态**%0D%0A%0D%0A";fi
-    if [ ! -z "$router_status" ] && [ "$router_status" -eq "1" ] ; then send_content=${send_content}"%0D%0A%0D%0A""- **CPU占用：**`top -n 1 |grep -i Cpu:| awk '{print $3": "$2" "$5": "$4}'`";fi
+    if [ ! -z "$router_status" ] && [ "$router_status" -eq "1" ] ; then send_content=${send_content}"%0D%0A%0D%0A""- **CPU使用率：**`top -n 1 |grep -i Cpu:| awk '{print $3": "$2" "$5": "$4}'`";fi
     if [ ! -z "$router_status" ] && [ "$router_status" -eq "1" ] ; then send_content=${send_content}"%0D%0A%0D%0A""- **平均负载：**`cat /proc/loadavg | awk '{print $1","$2","$3}'`";fi
     if [ ! -z "$router_status" ] && [ "$router_status" -eq "1" ] ; then send_content=${send_content}"%0D%0A%0D%0A""- **内存占用：**`free | grep [M]em | awk '{mem_total=$2 / 1024;mem_used=$3 / 1024;mem_percent=$3/$2*100.00;printf("%d MB / %d MB (%d%%)", mem_used,mem_total,mem_percent)}'`";fi
     if [ ! -z "$router_status" ] && [ "$router_status" -eq "1" ] ; then send_content=${send_content}"%0D%0A%0D%0A""- **当前连接数：**`cat /proc/sys/net/netfilter/nf_conntrack_count`";fi
